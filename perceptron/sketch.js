@@ -1,3 +1,4 @@
+
 // The Nature of Code
 // Daniel Shiffman
 // http://natureofcode.com
@@ -8,7 +9,7 @@
 // Code based on text "Artificial Intelligence", George Luger
 
 // A list of points we will use to "train" the perceptron
-let training = new Array(3000);
+let training = new Array(5);
 // A Perceptron object
 let ptron;
 
@@ -27,8 +28,11 @@ function f(x) {
   return y;
 }
 
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
 function setup() {
-  createCanvas(400, 400);
+  ctx.createCanvas(800, 800);
 
   // The perceptron has 3 inputs -- x, y, and bias
   // Second value is "Learning Constant"
@@ -49,21 +53,21 @@ function setup() {
 
 
 function draw() {
-  background(0);
+  ctx.background(0);
 
   // Draw the line
-  strokeWeight(1);
-  stroke(255);
+  ctx.strokeWeight(1);
+  ctx.stroke(255);
   let x1 = map(xmin, xmin, xmax, 0, width);
   let y1 = map(f(xmin), ymin, ymax, height, 0);
   let x2 = map(xmax, xmin, xmax, 0, width);
   let y2 = map(f(xmax), ymin, ymax, height, 0);
-  line(x1, y1, x2, y2);
+  ctx.line(x1, y1, x2, y2);
 
   // Draw the line based on the current weights
   // Formula is weights[0]*x + weights[1]*y + weights[2] = 0
-  stroke(255);
-  strokeWeight(2);
+  ctx.stroke(255);
+  ctx.strokeWeight(2);
   let weights = ptron.getWeights();
   x1 = xmin;
   y1 = (-weights[2] - weights[0] * x1) / weights[1];
@@ -74,7 +78,7 @@ function draw() {
   y1 = map(y1, ymin, ymax, height, 0);
   x2 = map(x2, xmin, xmax, 0, width);
   y2 = map(y2, ymin, ymax, height, 0);
-  line(x1, y1, x2, y2);
+  ctx.line(x1, y1, x2, y2);
 
 
   // Train the Perceptron with one "training" point at a time
@@ -84,14 +88,17 @@ function draw() {
   // Draw all the points based on what the Perceptron would "guess"
   // Does not use the "known" correct answer
   for (let i = 0; i < count; i++) {
-    stroke(255);
-    strokeWeight(1);
-    fill(255);
+    ctx.stroke(255);
+    ctx.strokeWeight(1);
+    ctx.fill(255);
     let guess = ptron.feedforward(training[i].input);
-    if (guess > 0) noFill();
+    if (guess > 0) ctx.noFill();
 
     let x = map(training[i].input[0], xmin, xmax, 0, width);
     let y = map(training[i].input[1], ymin, ymax, height, 0);
-    ellipse(x, y, 8, 8);
+    ctx.ellipse(x, y, 8, 8);
   }
 }
+
+setup();
+draw();
